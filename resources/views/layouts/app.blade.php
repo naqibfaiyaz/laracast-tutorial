@@ -47,7 +47,7 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}" data-toggle="modal" data-target="#loginModal">{{ __('Login') }}</a>
+                                <a class="nav-link" data-toggle="modal" data-target="#loginModal">{{ __('Login') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
@@ -81,10 +81,8 @@
         <main class="py-4">
             @yield('content')
             
-            @if(!auth()->check())
-                <vue-login></vue-login>
-            @endif
         </main>
+        <vue-login></vue-login>
     </div>
     
     <!-- Optional JavaScript -->

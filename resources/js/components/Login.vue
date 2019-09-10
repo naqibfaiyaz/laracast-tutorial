@@ -56,7 +56,6 @@
                         password: this.password,
                         remember: this.remember
                     }).then(resp =>{
-                        console.log(resp);
                         location.reload();
                     }).catch(error => {
                         console.log(error);
