@@ -1888,6 +1888,18 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return false;
+    },
+    attemptLogin: function attemptLogin() {
+      axios.post('/login', {
+        email: this.email,
+        password: this.password,
+        remember: this.remember
+      }).then(function (resp) {
+        console.log(resp);
+        location.reload();
+      })["catch"](function (error) {
+        console.log(error);
+      });
     }
   },
   computed: {
@@ -37344,7 +37356,12 @@ var render = function() {
                 {
                   staticClass:
                     "btn btn-lg btn-primary btn-block text-uppercase",
-                  attrs: { type: "submit", disabled: !_vm.isValidLoginForm }
+                  attrs: { type: "submit", disabled: !_vm.isValidLoginForm },
+                  on: {
+                    click: function($event) {
+                      return _vm.attemptLogin()
+                    }
+                  }
                 },
                 [_vm._v("Sign in")]
               ),

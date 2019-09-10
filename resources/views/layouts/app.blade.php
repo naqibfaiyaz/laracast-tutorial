@@ -81,8 +81,10 @@
         <main class="py-4">
             @yield('content')
             
+            @if(!auth()->check())
+                <vue-login></vue-login>
+            @endif
         </main>
-        <vue-login></vue-login>
     </div>
     
     <!-- Optional JavaScript -->
