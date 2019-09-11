@@ -6,6 +6,13 @@
                 <div class="modal-content card card-signin my-5">
                     <div class="card-body">
                         <h5 class="card-title text-center">Sign In</h5>
+                        <div class="card-body">
+                            <ul class="list-group" role="alert" v-if="errors.length > 0">
+                                <li class="list-group-item list-group-item-danger" v-for="error in errors" :key="errors.indexOf(error)">
+                                <strong>{{ error }}</strong>
+                                </li>
+                            </ul>
+                        </div>
                         <div class="form-signin">
                             <div class="form-label-group">
                                 <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus v-model="email">
@@ -23,8 +30,8 @@
                             </div>
                             <button class="btn btn-lg btn-primary btn-block text-uppercase" @click="attemptLogin()"  type="submit" :disabled="!isValidLoginForm">Sign in</button>
                             <hr class="my-4">
-                            <button class="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i class="fab fa-google mr-2"></i> Sign in with Google</button>
-                            <button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
+                            <button class="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i class="fa fa-google mr-2"></i> Sign in with Google</button>
+                            <button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i class="fa fa-facebook mr-2"></i> Sign in with Facebook</button>
                         </div>
                     </div>
                 </div>
@@ -37,10 +44,12 @@
     export default {
         data() {
             return {
-                email: '',
-                password: '',
-                remember: true
-                }        
+                    email: '',
+                    password: '',
+                    remember: true,
+                    loading: false,
+                    errors: []
+                }   
             },
             methods:{
                 isEmailValid() {
@@ -51,24 +60,8 @@
                         return false;
                 },
                 attemptLogin() {
-                    // $.ajax({
-                    //     type: "POST",
-                    //     url: "/login",
-                    //     data: {
-                    //         email: this.email,
-                    //         password: this.password,
-                    //         remember: this.remember
-                    //     },
-                    //     headers: {
-                    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    //     },
-                    //     async: true,
-                    //     success: function(msg) {
-                    //         console.log(msg);
-                    //     }
-                    // });
-
-
+                    this.errors=[];
+                   this.loading=true;
                     axios.post('/login', {
                         email: this.email,
                         password: this.password,
@@ -76,13 +69,18 @@
                     }).then(resp =>{
                         location.reload();
                     }).catch(error => {
-                        console.log(error);
+                        this.loading=false;
+                        if(error.response.status==422){
+                            this.errors.push('Email and password do not match. Please try again');
+                        }else{
+                            this.errors.push('Something went wrong. Please try again');
+                        }
                     })
                 }
             },
             computed:{
                 isValidLoginForm(){
-                    return this.isEmailValid() && this.password;
+                    return this.isEmailValid() && this.password && !this.loading;
                 }
             }
     }

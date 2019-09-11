@@ -1873,12 +1873,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       email: '',
       password: '',
-      remember: true
+      remember: true,
+      loading: false,
+      errors: []
     };
   },
   methods: {
@@ -1890,22 +1899,10 @@ __webpack_require__.r(__webpack_exports__);
       return false;
     },
     attemptLogin: function attemptLogin() {
-      // $.ajax({
-      //     type: "POST",
-      //     url: "/login",
-      //     data: {
-      //         email: this.email,
-      //         password: this.password,
-      //         remember: this.remember
-      //     },
-      //     headers: {
-      //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      //     },
-      //     async: true,
-      //     success: function(msg) {
-      //         console.log(msg);
-      //     }
-      // });
+      var _this = this;
+
+      this.errors = [];
+      this.loading = true;
       axios.post('/login', {
         email: this.email,
         password: this.password,
@@ -1913,13 +1910,19 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (resp) {
         location.reload();
       })["catch"](function (error) {
-        console.log(error);
+        _this.loading = false;
+
+        if (error.response.status == 422) {
+          _this.errors.push('Email and password do not match. Please try again');
+        } else {
+          _this.errors.push('Something went wrong. Please try again');
+        }
       });
     }
   },
   computed: {
     isValidLoginForm: function isValidLoginForm() {
-      return this.isEmailValid() && this.password;
+      return this.isEmailValid() && this.password && !this.loading;
     }
   }
 });
@@ -37240,6 +37243,26 @@ var render = function() {
               _vm._v("Sign In")
             ]),
             _vm._v(" "),
+            _c("div", { staticClass: "card-body" }, [
+              _vm.errors.length > 0
+                ? _c(
+                    "ul",
+                    { staticClass: "list-group", attrs: { role: "alert" } },
+                    _vm._l(_vm.errors, function(error) {
+                      return _c(
+                        "li",
+                        {
+                          key: _vm.errors.indexOf(error),
+                          staticClass: "list-group-item list-group-item-danger"
+                        },
+                        [_c("strong", [_vm._v(_vm._s(error))])]
+                      )
+                    }),
+                    0
+                  )
+                : _vm._e()
+            ]),
+            _vm._v(" "),
             _c("div", { staticClass: "form-signin" }, [
               _c("div", { staticClass: "form-label-group" }, [
                 _c("input", {
@@ -37405,7 +37428,7 @@ var staticRenderFns = [
         attrs: { type: "submit" }
       },
       [
-        _c("i", { staticClass: "fab fa-google mr-2" }),
+        _c("i", { staticClass: "fa fa-google mr-2" }),
         _vm._v(" Sign in with Google")
       ]
     )
@@ -37421,7 +37444,7 @@ var staticRenderFns = [
         attrs: { type: "submit" }
       },
       [
-        _c("i", { staticClass: "fab fa-facebook-f mr-2" }),
+        _c("i", { staticClass: "fa fa-facebook mr-2" }),
         _vm._v(" Sign in with Facebook")
       ]
     )
