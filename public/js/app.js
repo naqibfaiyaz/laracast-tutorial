@@ -1890,6 +1890,22 @@ __webpack_require__.r(__webpack_exports__);
       return false;
     },
     attemptLogin: function attemptLogin() {
+      // $.ajax({
+      //     type: "POST",
+      //     url: "/login",
+      //     data: {
+      //         email: this.email,
+      //         password: this.password,
+      //         remember: this.remember
+      //     },
+      //     headers: {
+      //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      //     },
+      //     async: true,
+      //     success: function(msg) {
+      //         console.log(msg);
+      //     }
+      // });
       axios.post('/login', {
         email: this.email,
         password: this.password,
@@ -37224,7 +37240,7 @@ var render = function() {
               _vm._v("Sign In")
             ]),
             _vm._v(" "),
-            _c("form", { staticClass: "form-signin" }, [
+            _c("div", { staticClass: "form-signin" }, [
               _c("div", { staticClass: "form-label-group" }, [
                 _c("input", {
                   directives: [

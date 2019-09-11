@@ -47,7 +47,7 @@ class LoginController extends Controller
      */
     public function authenticated(Request $request, $user)
     {
-        session()->flush('Success', "Successfully logged in");
+        // session()->flush('Success', "Successfully logged in");
 
         return response()->json([
             'status' => 'ok',
